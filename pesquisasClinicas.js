@@ -1,4 +1,4 @@
-const pesquisas = [
+let pesquisas = [
     {
         id: 1,
         nome: "Tratamento de forma grave da COVID-19 com Angiotensina-(1-7)",
@@ -43,6 +43,29 @@ const pesquisas = [
 
 const getAll = () => pesquisas;
 
+const getOne = (index) => pesquisas[index];
+
+const create = (obj) => {
+    pesquisas.push(obj);
+}
+
+const update = (obj, indexUpdate) => {
+    pesquisas = pesquisas.map((filme, index) => {
+        if(index === indexUpdate){
+            return obj;
+        }
+
+        return filme;
+    });
+}
+
+const deleteObj = (indexDelet) => {
+    pesquisas.splice(indexDelet, 1);
+}
 
 
 module.exports.getAll = getAll;
+module.exports.getOne = getOne;
+module.exports.create = create;
+module.exports.update = update;
+module.exports.deleteObj = deleteObj;
