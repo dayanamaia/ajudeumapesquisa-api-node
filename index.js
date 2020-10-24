@@ -2,17 +2,19 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 
+// Models
+const Pesquisa = require('./models/pesquisasClinicas');
+
+
 // DataBase
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://127.0.0.1:27017/AjudeUmaPesquisa', {
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/AjudeUmaPesquisa', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
 .then(() => console.log('MongoDB conectado'))
 .catch((error) => console.log(error))
 
-// Models
-const Pesquisa = require('./models/pesquisasClinicas');
 
 // Middleware
 app.use(express.json())
@@ -20,13 +22,13 @@ app.use(express.urlencoded({ extended: true }))
 
 
 // app.METHOD(PATH, HANDLER)
-app.get('/pesquisas', function(req, res) {
+app.get('/api/pesquisas', function(req, res) {
     Pesquisa.find()
     .then((pesquisas) => res.send(pesquisas))
     .catch(() => res.sendStatus(400))
 });
 
-app.get('/pesquisa/:index', function(req, res) {
+app.get('/api/pesquisas/:index', function(req, res) {
     const indexData = req.params.index;
     
     Pesquisa.findById(indexData)
@@ -34,7 +36,7 @@ app.get('/pesquisa/:index', function(req, res) {
     .catch(() => res.sendStatus(400))
 });
 
-app.post('/pesquisa', function(req, res) {
+app.post('/api/pesquisas', function(req, res) {
     const data = req.body;
 
     if(!data) {
@@ -46,7 +48,7 @@ app.post('/pesquisa', function(req, res) {
     .catch(() => res.sendStatus(400))
 });
 
-app.put('/pesquisa/:index', function(req, res) {
+app.put('/api/pesquisas/:index', function(req, res) {
     const data = req.body;
     const indexData = req.params.index;
 
@@ -59,7 +61,7 @@ app.put('/pesquisa/:index', function(req, res) {
     .catch(() => res.sendStatus(400))
 });
 
-app.delete('/pesquisa/:index', function(req, res) {
+app.delete('/api/pesquisas/:index', function(req, res) {
     const indexData = req.params.index;
     
     Pesquisa.findByIdAndRemove(indexData)
@@ -68,4 +70,4 @@ app.delete('/pesquisa/:index', function(req, res) {
 });
 
 // Server
-app.listen(8080, () => console.log("http://127.0.0.1:8080/"));
+app.listen(process.env.PORT || 8080, () => console.log("http://127.0.0.1:8080/"));
